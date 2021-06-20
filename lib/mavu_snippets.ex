@@ -2,19 +2,15 @@ defmodule MavuSnippets do
   @moduledoc false
 
   alias MavuSnippets.SnippetGroups
+  alias MavuContent.Clist
 
   def default_conf(local_conf \\ %{}) do
-    conf_from_env = Application.get_all_env(:mavu_snippets)
-
-    if MavuUtils.present?(conf_from_env) do
-      conf_from_env |> Map.new()
-    else
-      %{
-        repo: MyApp.Repo,
-        # langs: [l1: "en", l2: "de"]
-        langs: [l1: "en"]
-      }
-    end
+    %{
+      repo: MyApp.Repo,
+      # langs: [l1: "en", l2: "de"]
+      langs: [l1: "en"]
+    }
+    |> Map.merge(Application.get_all_env(:mavu_snippets) |> Map.new())
     |> Map.merge(local_conf)
   end
 
@@ -59,15 +55,15 @@ defmodule MavuSnippets do
   def get_snippet_element(snippet_path, opts) when is_binary(snippet_path),
     do: get_snippet_element(parse_snippet_path(snippet_path), opts)
 
-  def get_snippet_element({snippet_group_path, element_name}, opts)
+  def get_snippet_element({snippet_group_path, element_slug}, opts)
       when is_binary(snippet_group_path) do
     get_snippet_element(
       get_or_create_snippet_group(snippet_group_path, opts[:conf]),
-      element_name
+      element_slug
     )
     |> case do
       nil ->
-        create_snippet_element(snippet_group_path, element_name, opts[:default], nil, opts[:conf])
+        create_snippet_element(snippet_group_path, element_slug, opts[:default], nil, opts[:conf])
 
       val ->
         val
@@ -77,47 +73,44 @@ defmodule MavuSnippets do
   def get_snippet_element(nil, _), do: nil
   def get_snippet_element(_, nil), do: nil
 
-  def get_snippet_element(snippet_group, element_name)
-      when is_map(snippet_group) and is_binary(element_name) do
-    snippet_group |> Map.get(element_name)
+  def get_snippet_element(snippet_group, element_slug)
+      when is_map(snippet_group) and is_binary(element_slug) do
+    snippet_group |> Map.get(element_slug)
   end
 
-  @spec create_snippet_element(binary, binary, any, false | nil | binary, map) :: %{
-          :path => binary,
-          :text_d1 => any,
-          :text_l1 => <<_::104>>,
-          optional(<<_::24, _::_*16>>) => binary
-        }
   def create_snippet_element(
         snippet_group_path,
-        element_name,
+        element_slug,
         default_content,
         ctype \\ nil,
         conf \\ %{}
       )
-      when is_binary(snippet_group_path) and is_binary(element_name) and is_map(conf) do
+      when is_binary(snippet_group_path) and is_binary(element_slug) and is_map(conf) do
     snippet_group = SnippetGroups.get_snippet_group(snippet_group_path, conf)
 
     new_element = %{
-      path: element_name,
-      text_l1: "__use_default",
-      text_d1:
-        case default_content do
-          {:safe, _} -> default_content |> Phoenix.HTML.safe_to_string()
-          c -> c
-        end
+      "slug" => element_slug,
+      "text_l1" => "__use_default",
+      "text_d1" => default_content |> prepare_default_content()
     }
 
-    ctype = ctype || get_ctype_from_element_name(element_name)
+    ctype = ctype || get_ctype_from_element_slug(element_slug)
     snippet_element = MavuContent.Ce.create(ctype) |> Map.merge(new_element)
 
-    contentlist = MavuContent.Clist.append(snippet_group.content, "root", snippet_element)
+    contentlist = Clist.append(snippet_group.content, "root", snippet_element)
     SnippetGroups.update_snippet_group(snippet_group, %{content: contentlist}, conf)
 
     snippet_element
   end
 
-  def get_ctype_from_element_name(name) when is_binary(name) do
+  def prepare_default_content(default_content) do
+    case default_content do
+      {:safe, _} -> default_content |> Phoenix.HTML.safe_to_string()
+      c -> c
+    end
+  end
+
+  def get_ctype_from_element_slug(name) when is_binary(name) do
     cond do
       String.ends_with?(name, "_html") -> "ce_html_snippet"
       String.ends_with?(name, "_text") -> "ce_html_snippet"
@@ -127,21 +120,21 @@ defmodule MavuSnippets do
   end
 
   def parse_snippet_path(snippet_path) when is_binary(snippet_path) do
-    [snippet_group_path, fieldname] = String.split(snippet_path, ".")
-    {snippet_group_path, fieldname}
+    [snippet_group_path, slug] = String.split(snippet_path, ".")
+    {snippet_group_path, slug}
   end
 
   def collect_fields_from_contentlist(contents) when is_list(contents) do
     contents
-    |> Enum.filter(fn a -> a["path"] end)
+    |> Enum.filter(fn a -> a["slug"] end)
     |> Enum.reduce(%{}, fn el, acc ->
       ce =
         el
-        |> AtomicMap.convert(safe: true, ignore: true)
-        |> Map.drop(~w(uid path)a)
-        |> update_in([:ctype], &clean_ctype/1)
+        # |> AtomicMap.convert(safe: true, ignore: true)
+        |> Map.drop(~w(uid slug))
+        |> update_in(["ctype"], &clean_ctype/1)
 
-      Map.put(acc, el["path"], ce)
+      Map.put(acc, el["slug"], ce)
     end)
   end
 
@@ -151,11 +144,11 @@ defmodule MavuSnippets do
 
   defdelegate compile(text, values), to: MavuSnippets.SnippetCompiler
 
-  def s(lang_or_params, key, default \\ nil, variables \\ []) do
+  def s(lang_or_params, path, default \\ nil, variables \\ []) do
     {default, variables} =
       cond do
         is_list(default) and default[:do] ->
-          {default[:do], default |> Enum.filter(fn {key, _} -> key != :do end)}
+          {default[:do], default |> Enum.filter(fn {path, _} -> path != :do end)}
 
         is_list(variables) and variables[:do] ->
           {variables[:do], default}
@@ -164,43 +157,97 @@ defmodule MavuSnippets do
           {default, variables}
       end
 
-    case get_snippet_element(key, default: default, conf: variables[:conf]) do
+    case get_snippet_element(path, default: default, conf: variables[:conf]) do
       el when is_map(el) ->
-        get_language_text_from_element(lang_or_params, el, variables[:conf])
+        el = update_default_content_in_element_if_needed(el, default, path, variables[:conf])
+
+        {_mode, text} = get_effective_text_from_element(el, lang_or_params, variables[:conf])
+
+        text
         |> MavuSnippets.SnippetCompiler.compile(Keyword.drop(variables, [:do, :conf]))
         |> format_snippet_accordingly(el[:ctype])
 
       _ ->
-        default || "[" <> key <> "]"
+        default || "[" <> path <> "]"
     end
   end
 
-  def get_language_text_from_element(lang_or_params, el, conf) when is_map(el) and is_map(conf) do
-    case get_text_from_element(lang_from_params(lang_or_params), el) do
-      {:ok, text} ->
-        text
+  def update_default_content_in_element_if_needed(el, default_content, path, conf \\ %{})
+      when is_binary(path) and is_map(el) do
+    content2compare = default_content |> prepare_default_content()
 
-      _ ->
-        get_text_from_element(default_lang(conf), el)
+    if content2compare != el["text_d1"] do
+      update_snippet_element(el, path, %{"text_d1" => content2compare}, conf)
+    else
+      el
     end
   end
 
-  def get_text_from_element(lang_str, el) when is_binary(lang_str) and is_map(el) do
-    langnum = langnum_for_langstr(lang_str)
-    text_key = "text_l#{langnum}" |> String.to_existing_atom()
-    default_key = "text_d#{langnum}" |> String.to_existing_atom()
+  def update_snippet_element(el, snippet_path, values, conf \\ %{})
+      when is_map(el) and is_binary(snippet_path) and is_map(values) do
+    {snippet_group_path, element_slug} = parse_snippet_path(snippet_path)
 
-    Map.get(el, text_key, "")
+    snippet_group = SnippetGroups.get_snippet_group(snippet_group_path, conf)
+
+    el =
+      Clist.get_clist(snippet_group.content, "root")
+      |> Enum.find(&(&1["slug"] == element_slug))
+
+    contentlist = Clist.update(snippet_group.content, "root", el["uid"], values)
+    {:ok, el} = SnippetGroups.update_snippet_group(snippet_group, %{content: contentlist}, conf)
+    el
+  end
+
+  def get_effective_text_from_element(el, lang_or_params, conf \\ %{})
+      when is_map(el) do
+    lang = lang_from_params(lang_or_params)
+    default_lang = default_lang(conf)
+
+    {lang, default_lang} |> IO.inspect(label: "mwuits-debug 2021-06-20_18:48 ")
+
+    case get_text_from_element(el, lang)
+         |> IO.inspect(label: "mwuits-debug 2021-06-20_18:54 GETTEXT") do
+      {:custom, text} ->
+        {:custom, text}
+
+      {:default, default_text} ->
+        if lang == default_lang do
+          {:default, default_text}
+        else
+          case get_text_from_element(el, default_lang) do
+            {:custom, text} -> {:fallback, text}
+            {:default, _text} -> {:fallback, default_text}
+            {:unset, _text} -> {:fallback, default_text}
+          end
+        end
+
+      {:unset, text} ->
+        if lang == default_lang do
+          {:unset, text}
+        else
+          {_mode, text} = get_text_from_element(el, default_lang)
+          {:fallback, text}
+        end
+    end
+  end
+
+  def get_text_from_element(el, lang_str, conf \\ %{})
+      when is_binary(lang_str) and is_map(el) do
+    langnum = langnum_for_langstr(lang_str, conf)
+
+    Map.get(el, "text_l#{langnum}", :no_text_found)
     |> case do
-      "__use_default" -> Map.get(el, default_key, "")
-      text -> text
-    end
-  end
+      "__use_default" ->
+        case Map.get(el, "text_d#{langnum}", :no_default_text_found) do
+          :no_default_text_found -> {:unset, ""}
+          text -> {:default, text}
+        end
 
-  def trans(lang_or_params, txt_l1, txt_l2 \\ nil) do
-    case lang_from_params(lang_or_params) do
-      "en" -> if MavuUtils.present?(txt_l2), do: txt_l2, else: txt_l1
-      _ -> txt_l1
+      :no_text_found ->
+        {:unset, ""}
+
+      text ->
+        {:custom, text}
     end
   end
 
@@ -245,17 +292,6 @@ defmodule MavuSnippets do
     end)
     |> Map.new()
   end
-
-  # def get_snippet_text(lang_or_params, key, default \\ nil, variables \\ []) do
-  #   case MyApp.Snippets.get_snippet_element(key, default: default) do
-  #     el when is_map(el) ->
-  #       trans(lang_or_params, el[:text_l1], el[:text_l2])
-  #       |> MyApp.Snippets.compile(variables)
-
-  #     _ ->
-  #       default || "[" <> key <> "]"
-  #   end
-  # end
 
   def format_snippet_accordingly(content, type) do
     case type do
