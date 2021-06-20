@@ -1,10 +1,10 @@
-defmodule MavuRodent.MixProject do
+defmodule MavuSnippets.MixProject do
   use Mix.Project
 
   @version "0.1.0"
   def project do
     [
-      app: :mavu_rodent,
+      app: :mavu_snippets,
       version: @version,
       elixir: "~> 1.0",
       build_embedded: Mix.env() == :prod,
@@ -12,8 +12,8 @@ defmodule MavuRodent.MixProject do
       description: description(),
       package: package(),
       deps: deps(),
-      name: "MavuRodent",
-      source_url: "https://github.com/mavuio/mavu_rodent"
+      name: "MavuSnippets",
+      source_url: "https://github.com/mavuio/mavu_snippets"
     ]
   end
 
@@ -29,20 +29,27 @@ defmodule MavuRodent.MixProject do
     [
       # {:dep_from_hexpm, "~> 0.3.0"},
       # {:dep_from_git, git: "https://github.com/elixir-lang/my_dep.git", tag: "0.1.0"}
+      {:phoenix_html, ">= 2.0.0"},
+      {:phoenix, ">= 1.5.0"},
+      {:atomic_map, "~> 0.8"},
+      {:accessible, ">= 0.2.0"},
+      {:mavu_utils, "~> 0.1.0"},
+      {:mavu_content, path: "/www/mavu_content"},
+      {:memoize, ">= 1.3.0"},
       {:ecto, ">= 3.0.0"},
       {:ex_doc, ">= 0.0.0", only: :dev, runtime: false}
     ]
   end
 
   defp description() do
-    "MavuRodent: Rodent - Management for mavu_* projects"
+    "MavuSnippets: Snippets - Management for mavu_* projects"
   end
 
   defp package() do
     [
       files: ~w(lib .formatter.exs mix.exs README*),
       licenses: ["Apache-2.0"],
-      links: %{"GitHub" => "https://github.com/mavuio/mavu_rodent"}
+      links: %{"GitHub" => "https://github.com/mavuio/mavu_snippets"}
     ]
   end
 end
