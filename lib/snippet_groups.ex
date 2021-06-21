@@ -75,7 +75,7 @@ defmodule MavuSnippets.SnippetGroups do
     do: get_conf_val(conf, :repo).get(SnippetGroup, id)
 
   def get_snippet_group(path, conf) when is_binary(path),
-    do: get_conf_val(conf, :repo).get_by(SnippetGroup, path: path)
+    do: get_conf_val(conf, :repo).get_by(SnippetGroup, path: SnippetGroup.normalize_path(path))
 
   @doc """
   Creates a snippet_group.
@@ -90,9 +90,13 @@ defmodule MavuSnippets.SnippetGroups do
 
   """
   def create_snippet_group(%{} = attrs, conf) do
-    %SnippetGroup{}
-    |> SnippetGroup.changeset(attrs)
-    |> get_conf_val(conf, :repo).insert()
+    res =
+      %SnippetGroup{}
+      |> SnippetGroup.changeset(attrs)
+      |> get_conf_val(conf, :repo).insert()
+
+    invalidate_cache()
+    res
   end
 
   @doc """
@@ -107,16 +111,19 @@ defmodule MavuSnippets.SnippetGroups do
       {:error, %Ecto.Changeset{}}
 
   """
-  def update_snippet_group(%SnippetGroup{} = snippet_group, attrs, conf) when is_map(conf) do
+  def update_snippet_group(%SnippetGroup{} = snippet_group, attrs, conf \\ %{}) do
     res =
       snippet_group
       |> SnippetGroup.changeset(attrs)
       |> get_conf_val(conf, :repo).update()
 
     # invalidate all cached texts
-    Memoize.invalidate(__MODULE__, :get_cached_snippet_group)
-
+    invalidate_cache()
     res
+  end
+
+  def invalidate_cache() do
+    Memoize.invalidate(__MODULE__, :get_cached_snippet_group)
   end
 
   def duplicate_snippet_group(%SnippetGroup{} = snippet_group, conf) do

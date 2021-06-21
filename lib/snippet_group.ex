@@ -15,6 +15,21 @@ defmodule MavuSnippets.SnippetGroup do
   def changeset(snippet, attrs) do
     snippet
     |> cast(attrs, [:name, :path, :content])
+    |> update_change(:path, &normalize_path/1)
     |> validate_required([:path])
+  end
+
+  def normalize_path(path) do
+    Regex.replace(~r([^a-z/-])i, "#{path}", "_")
+    |> String.downcase()
+    |> String.trim("_")
+    |> String.trim("/")
+    |> String.trim("_")
+  end
+
+  def normalize_slug(path) do
+    Regex.replace(~r([^a-z/-])i, "#{path}", "_")
+    |> String.downcase()
+    |> String.trim("_")
   end
 end

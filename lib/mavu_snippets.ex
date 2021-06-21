@@ -2,6 +2,7 @@ defmodule MavuSnippets do
   @moduledoc false
 
   alias MavuSnippets.SnippetGroups
+  alias MavuSnippets.SnippetGroup
   alias MavuContent.Clist
 
   def default_conf(local_conf \\ %{}) do
@@ -85,12 +86,12 @@ defmodule MavuSnippets do
         ctype \\ nil,
         conf \\ %{}
       )
-      when is_binary(snippet_group_path) and is_binary(element_slug) and is_map(conf) do
+      when is_binary(snippet_group_path) and is_binary(element_slug) do
     snippet_group = SnippetGroups.get_snippet_group(snippet_group_path, conf)
 
     new_element = %{
       "slug" => element_slug,
-      "text_l1" => "__use_default",
+      "text_l1" => "",
       "text_d1" => default_content |> prepare_default_content()
     }
 
@@ -121,7 +122,7 @@ defmodule MavuSnippets do
 
   def parse_snippet_path(snippet_path) when is_binary(snippet_path) do
     [snippet_group_path, slug] = String.split(snippet_path, ".")
-    {snippet_group_path, slug}
+    {snippet_group_path |> SnippetGroup.normalize_path(), slug |> SnippetGroup.normalize_slug()}
   end
 
   def collect_fields_from_contentlist(contents) when is_list(contents) do
@@ -144,7 +145,7 @@ defmodule MavuSnippets do
 
   defdelegate compile(text, values), to: MavuSnippets.SnippetCompiler
 
-  def s(lang_or_params, path, default \\ nil, variables \\ []) do
+  def snip(lang_or_params, path, default \\ nil, variables \\ []) do
     {default, variables} =
       cond do
         is_list(default) and default[:do] ->
@@ -165,7 +166,7 @@ defmodule MavuSnippets do
 
         text
         |> MavuSnippets.SnippetCompiler.compile(Keyword.drop(variables, [:do, :conf]))
-        |> format_snippet_accordingly(el[:ctype])
+        |> format_snippet_accordingly(el["ctype"])
 
       _ ->
         default || "[" <> path <> "]"
@@ -203,10 +204,9 @@ defmodule MavuSnippets do
     lang = lang_from_params(lang_or_params)
     default_lang = default_lang(conf)
 
-    {lang, default_lang} |> IO.inspect(label: "mwuits-debug 2021-06-20_18:48 ")
+    # {lang, default_lang} |> IO.inspect(label: "mwuits-debug 2021-06-20_18:48 ")
 
-    case get_text_from_element(el, lang)
-         |> IO.inspect(label: "mwuits-debug 2021-06-20_18:54 GETTEXT") do
+    case get_text_from_element(el, lang) do
       {:custom, text} ->
         {:custom, text}
 
@@ -237,7 +237,7 @@ defmodule MavuSnippets do
 
     Map.get(el, "text_l#{langnum}", :no_text_found)
     |> case do
-      "__use_default" ->
+      empty_text when empty_text in [nil, ""] ->
         case Map.get(el, "text_d#{langnum}", :no_default_text_found) do
           :no_default_text_found -> {:unset, ""}
           text -> {:default, text}
