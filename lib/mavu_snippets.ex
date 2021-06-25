@@ -174,6 +174,11 @@ defmodule MavuSnippets do
   end
 
   def update_default_content_in_element_if_needed(el, default_content, path, conf \\ %{})
+
+  def update_default_content_in_element_if_needed(el, _default_content = nil, _, _),
+    do: el
+
+  def update_default_content_in_element_if_needed(el, default_content, path, conf)
       when is_binary(path) and is_map(el) do
     content2compare = default_content |> prepare_default_content()
 
