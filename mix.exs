@@ -1,7 +1,7 @@
 defmodule MavuSnippets.MixProject do
   use Mix.Project
 
-  @version "0.1.1"
+  @version "0.1.2"
   def project do
     [
       app: :mavu_snippets,
@@ -34,7 +34,7 @@ defmodule MavuSnippets.MixProject do
       {:atomic_map, "~> 0.8"},
       {:accessible, ">= 0.2.0"},
       {:mavu_utils, "~> 0.1.0"},
-      {:mavu_content, path: "/www/mavu_content"},
+      {:mavu_content, "~> 0.1.0"},
       {:memoize, ">= 1.3.0"},
       {:ecto, ">= 3.0.0"},
       {:ex_doc, ">= 0.0.0", only: :dev, runtime: false}
@@ -42,7 +42,7 @@ defmodule MavuSnippets.MixProject do
   end
 
   defp description() do
-    "MavuSnippets: Snippets - Management for mavu_* projects"
+    "MavuSnippets: Text-Snippet - Management for mavu_* projects"
   end
 
   defp package() do

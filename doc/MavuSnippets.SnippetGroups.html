@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="ExDoc v0.24.2">
+    <meta name="project" content="MavuSnippets v0.1.1">
+
+    <title>MavuSnippets.SnippetGroups — MavuSnippets v0.1.1</title>
+    <link rel="stylesheet" href="dist/elixir-a172fe91e725dcb259e2.css" />
+
+    <script src="dist/sidebar_items-8b18a5a914.js"></script>
+
+      <script src="docs_config.js"></script>
+
+    <script async src="dist/app-f27ff079945e43879c46.js"></script>
+
+
+  </head>
+  <body data-type="modules">
+    <script>
+
+      try {
+        if (localStorage.getItem('night-mode') === 'true') {
+          document.body.classList.add('night-mode');
+        }
+      } catch (error) { }
+    </script>
+
+<div class="main">
+
+<button class="sidebar-button sidebar-toggle">
+  <span class="icon-menu" title="Collapse/expand sidebar"></span>
+</button>
+
+<section class="sidebar">
+  <form class="sidebar-search" action="search.html">
+    <button type="submit" class="search-button" aria-label="Submit Search">
+      <span class="icon-search" aria-hidden="true" title="Submit search"></span>
+    </button>
+    <button type="button" tabindex="-1" class="search-close-button" aria-label="Cancel Search">
+      <span class="icon-cross" aria-hidden="true" title="Cancel search"></span>
+    </button>
+    <label class="search-label">
+      <input name="q" type="text" class="search-input" placeholder="Search..." aria-label="Input your search terms" autocomplete="off" />
+    </label>
+  </form>
+
+  <div class="autocomplete">
+    <div class="autocomplete-results">
+    </div>
+  </div>
+
+  <div class="sidebar-header">
+    <div class="sidebar-projectDetails">
+      <a href="api-reference.html" class="sidebar-projectName">
+MavuSnippets
+      </a>
+      <strong class="sidebar-projectVersion">
+        v0.1.1
+      </strong>
+    </div>
+
+  </div>
+
+  <ul class="sidebar-listNav">
+    <li><a id="extras-list-link" href="#full-list">Pages</a></li>
+
+      <li><a id="modules-list-link" href="#full-list">Modules</a></li>
+
+
+  </ul>
+  <div class="gradient"></div>
+  <ul id="full-list" class="sidebar-fullList"></ul>
+</section>
+
+<section class="content">
+  <div class="content-outer">
+    <div id="content" class="content-inner">
+
+      <h1>
+MavuSnippets.SnippetGroups <small class="app-vsn">(MavuSnippets v0.1.1)</small>
+
+          <a href="https://github.com/mavuio/mavu_snippets/blob/master/lib/snippet_groups.ex#L1" title="View Source" class="view-source" rel="help">
+            <span class="icon-code" aria-hidden="true"></span>
+            <span class="sr-only">View Source</span>
+          </a>
+
+      </h1>
+
+
+        <section id="moduledoc">
+<p>The Snippet_Group context.</p>
+        </section>
+
+
+        <section id="summary" class="details-list">
+          <h1 class="section-heading">
+            <a class="hover-link" href="#summary">
+              <span class="icon-link" aria-hidden="true"></span>
+              <span class="sr-only">Link to this section</span>
+            </a>
+            Summary
+          </h1>
+
+  <div class="summary-functions summary">
+    <h2>
+      <a href="#functions">Functions</a>
+    </h2>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#append_content/2">append_content(contents, content)</a>
+
+  </div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#change_snippet_group/2">change_snippet_group(snippet_group, attrs \\ %{})</a>
+
+  </div>
+
+    <div class="summary-synopsis"><p>Returns an <code class="inline">%Ecto.Changeset{}</code> for tracking snippet-group changes.</p></div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#create_snippet_group/2">create_snippet_group(attrs, conf)</a>
+
+  </div>
+
+    <div class="summary-synopsis"><p>Creates a snippet_group.</p></div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#delete_snippet_group/2">delete_snippet_group(snippet_group, conf)</a>
+
+  </div>
+
+    <div class="summary-synopsis"><p>Deletes a snippet_group.</p></div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#duplicate_snippet_group/2">duplicate_snippet_group(snippet_group, conf)</a>
+
+  </div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#get_cached_snippet_group/2">get_cached_snippet_group(t1, t2)</a>
+
+  </div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#get_content_list/1">get_content_list(snippet_group)</a>
+
+  </div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#get_content_list/2">get_content_list(id, conf)</a>
+
+  </div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#get_content_types/0">get_content_types()</a>
+
+  </div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#get_query/2">get_query(params, context)</a>
+
+  </div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#get_snippet_group/2">get_snippet_group(id, conf)</a>
+
+  </div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#get_snippet_group!/2">get_snippet_group!(id, conf)</a>
+
+  </div>
+
+    <div class="summary-synopsis"><p>Gets a single snippet_group.</p></div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#invalidate_cache/0">invalidate_cache()</a>
+
+  </div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#list_snippet_groups/1">list_snippet_groups(conf)</a>
+
+  </div>
+
+    <div class="summary-synopsis"><p>Returns the list of snippet-groups.</p></div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#update_snippet_group/3">update_snippet_group(snippet_group, attrs, conf \\ %{})</a>
+
+  </div>
+
+    <div class="summary-synopsis"><p>Updates a snippet_group.</p></div>
+
+</div>
+
+  </div>
+
+        </section>
+
+
+        <section id="functions" class="details-list">
+          <h1 class="section-heading">
+            <a class="hover-link" href="#functions">
+              <span class="icon-link" aria-hidden="true"></span>
+              <span class="sr-only">Link to this section</span>
+            </a>
+Functions
+          </h1>
+          <div class="functions-list">
+<section class="detail" id="append_content/2">
+
+  <div class="detail-header">
+    <a href="#append_content/2" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">append_content(contents, content)</h1>
+
+      <a href="https://github.com/mavuio/mavu_snippets/blob/master/lib/snippet_groups.ex#L13" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+
+  </section>
+</section>
+<section class="detail" id="change_snippet_group/2">
+
+    <span id="change_snippet_group/1"></span>
+
+  <div class="detail-header">
+    <a href="#change_snippet_group/2" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">change_snippet_group(snippet_group, attrs \\ %{})</h1>
+
+      <a href="https://github.com/mavuio/mavu_snippets/blob/master/lib/snippet_groups.ex#L164" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>Returns an <code class="inline">%Ecto.Changeset{}</code> for tracking snippet-group changes.</p><h2 id="change_snippet_group/2-examples" class="section-heading">
+  <a href="#change_snippet_group/2-examples" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
+  Examples
+</h2>
+<pre><code class="makeup elixir"><span class="gp unselectable">iex&gt; </span><span class="n">change_snippet_group</span><span class="p" data-group-id="8921738899-1">(</span><span class="n">snippet_group</span><span class="p" data-group-id="8921738899-1">)</span><span class="w">
+</span><span class="p" data-group-id="8921738899-2">%</span><span class="nc" data-group-id="8921738899-2">Ecto.Changeset</span><span class="p" data-group-id="8921738899-2">{</span><span class="ss">data</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="8921738899-3">%</span><span class="nc" data-group-id="8921738899-3">SnippetGroup</span><span class="p" data-group-id="8921738899-3">{</span><span class="p" data-group-id="8921738899-3">}</span><span class="p" data-group-id="8921738899-2">}</span></code></pre>
+  </section>
+</section>
+<section class="detail" id="create_snippet_group/2">
+
+  <div class="detail-header">
+    <a href="#create_snippet_group/2" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">create_snippet_group(attrs, conf)</h1>
+
+      <a href="https://github.com/mavuio/mavu_snippets/blob/master/lib/snippet_groups.ex#L92" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>Creates a snippet_group.</p><h2 id="create_snippet_group/2-examples" class="section-heading">
+  <a href="#create_snippet_group/2-examples" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
+  Examples
+</h2>
+<pre><code class="makeup elixir"><span class="gp unselectable">iex&gt; </span><span class="n">create_snippet_group</span><span class="p" data-group-id="7869880830-1">(</span><span class="p" data-group-id="7869880830-2">%{</span><span class="ss">field</span><span class="p">:</span><span class="w"> </span><span class="n">value</span><span class="p" data-group-id="7869880830-2">}</span><span class="p" data-group-id="7869880830-1">)</span><span class="w">
+</span><span class="p" data-group-id="7869880830-3">{</span><span class="ss">:ok</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="7869880830-4">%</span><span class="nc" data-group-id="7869880830-4">SnippetGroup</span><span class="p" data-group-id="7869880830-4">{</span><span class="p" data-group-id="7869880830-4">}</span><span class="p" data-group-id="7869880830-3">}</span><span class="w">
+
+</span><span class="gp unselectable">iex&gt; </span><span class="n">create_snippet_group</span><span class="p" data-group-id="7869880830-5">(</span><span class="p" data-group-id="7869880830-6">%{</span><span class="ss">field</span><span class="p">:</span><span class="w"> </span><span class="n">bad_value</span><span class="p" data-group-id="7869880830-6">}</span><span class="p" data-group-id="7869880830-5">)</span><span class="w">
+</span><span class="p" data-group-id="7869880830-7">{</span><span class="ss">:error</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="7869880830-8">%</span><span class="nc" data-group-id="7869880830-8">Ecto.Changeset</span><span class="p" data-group-id="7869880830-8">{</span><span class="p" data-group-id="7869880830-8">}</span><span class="p" data-group-id="7869880830-7">}</span></code></pre>
+  </section>
+</section>
+<section class="detail" id="delete_snippet_group/2">
+
+  <div class="detail-header">
+    <a href="#delete_snippet_group/2" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">delete_snippet_group(snippet_group, conf)</h1>
+
+      <a href="https://github.com/mavuio/mavu_snippets/blob/master/lib/snippet_groups.ex#L151" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>Deletes a snippet_group.</p><h2 id="delete_snippet_group/2-examples" class="section-heading">
+  <a href="#delete_snippet_group/2-examples" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
+  Examples
+</h2>
+<pre><code class="makeup elixir"><span class="gp unselectable">iex&gt; </span><span class="n">delete_snippet_group</span><span class="p" data-group-id="0315498134-1">(</span><span class="n">snippet_group</span><span class="p" data-group-id="0315498134-1">)</span><span class="w">
+</span><span class="p" data-group-id="0315498134-2">{</span><span class="ss">:ok</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="0315498134-3">%</span><span class="nc" data-group-id="0315498134-3">SnippetGroup</span><span class="p" data-group-id="0315498134-3">{</span><span class="p" data-group-id="0315498134-3">}</span><span class="p" data-group-id="0315498134-2">}</span><span class="w">
+
+</span><span class="gp unselectable">iex&gt; </span><span class="n">delete_snippet_group</span><span class="p" data-group-id="0315498134-4">(</span><span class="n">snippet_group</span><span class="p" data-group-id="0315498134-4">)</span><span class="w">
+</span><span class="p" data-group-id="0315498134-5">{</span><span class="ss">:error</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="0315498134-6">%</span><span class="nc" data-group-id="0315498134-6">Ecto.Changeset</span><span class="p" data-group-id="0315498134-6">{</span><span class="p" data-group-id="0315498134-6">}</span><span class="p" data-group-id="0315498134-5">}</span></code></pre>
+  </section>
+</section>
+<section class="detail" id="duplicate_snippet_group/2">
+
+  <div class="detail-header">
+    <a href="#duplicate_snippet_group/2" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">duplicate_snippet_group(snippet_group, conf)</h1>
+
+      <a href="https://github.com/mavuio/mavu_snippets/blob/master/lib/snippet_groups.ex#L129" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+
+  </section>
+</section>
+<section class="detail" id="get_cached_snippet_group/2">
+
+  <div class="detail-header">
+    <a href="#get_cached_snippet_group/2" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">get_cached_snippet_group(t1, t2)</h1>
+
+      <a href="https://github.com/mavuio/mavu_snippets/blob/master/lib/snippet_groups.ex#L26" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+
+  </section>
+</section>
+<section class="detail" id="get_content_list/1">
+
+  <div class="detail-header">
+    <a href="#get_content_list/1" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">get_content_list(snippet_group)</h1>
+
+      <a href="https://github.com/mavuio/mavu_snippets/blob/master/lib/snippet_groups.ex#L38" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+
+  </section>
+</section>
+<section class="detail" id="get_content_list/2">
+
+  <div class="detail-header">
+    <a href="#get_content_list/2" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">get_content_list(id, conf)</h1>
+
+      <a href="https://github.com/mavuio/mavu_snippets/blob/master/lib/snippet_groups.ex#L35" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+
+  </section>
+</section>
+<section class="detail" id="get_content_types/0">
+
+  <div class="detail-header">
+    <a href="#get_content_types/0" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">get_content_types()</h1>
+
+      <a href="https://github.com/mavuio/mavu_snippets/blob/master/lib/snippet_groups.ex#L17" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+
+  </section>
+</section>
+<section class="detail" id="get_query/2">
+
+  <div class="detail-header">
+    <a href="#get_query/2" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">get_query(params, context)</h1>
+
+      <a href="https://github.com/mavuio/mavu_snippets/blob/master/lib/snippet_groups.ex#L30" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+
+  </section>
+</section>
+<section class="detail" id="get_snippet_group/2">
+
+  <div class="detail-header">
+    <a href="#get_snippet_group/2" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">get_snippet_group(id, conf)</h1>
+
+      <a href="https://github.com/mavuio/mavu_snippets/blob/master/lib/snippet_groups.ex#L74" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+
+  </section>
+</section>
+<section class="detail" id="get_snippet_group!/2">
+
+  <div class="detail-header">
+    <a href="#get_snippet_group!/2" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">get_snippet_group!(id, conf)</h1>
+
+      <a href="https://github.com/mavuio/mavu_snippets/blob/master/lib/snippet_groups.ex#L72" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>Gets a single snippet_group.</p><p>Raises <a href="https://hexdocs.pm/ecto/3.6.2/Ecto.NoResultsError.html"><code class="inline">Ecto.NoResultsError</code></a> if the SnippetGroup does not exist.</p><h2 id="get_snippet_group!/2-examples" class="section-heading">
+  <a href="#get_snippet_group!/2-examples" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
+  Examples
+</h2>
+<pre><code class="makeup elixir"><span class="gp unselectable">iex&gt; </span><span class="n">get_snippet_group!</span><span class="p" data-group-id="7683730941-1">(</span><span class="mi">123</span><span class="p" data-group-id="7683730941-1">)</span><span class="w">
+</span><span class="p" data-group-id="7683730941-2">%</span><span class="nc" data-group-id="7683730941-2">SnippetGroup</span><span class="p" data-group-id="7683730941-2">{</span><span class="p" data-group-id="7683730941-2">}</span><span class="w">
+
+</span><span class="gp unselectable">iex&gt; </span><span class="n">get_snippet_group!</span><span class="p" data-group-id="7683730941-3">(</span><span class="mi">456</span><span class="p" data-group-id="7683730941-3">)</span><span class="w">
+</span><span class="gt">** (Ecto.NoResultsError)</span></code></pre>
+  </section>
+</section>
+<section class="detail" id="invalidate_cache/0">
+
+  <div class="detail-header">
+    <a href="#invalidate_cache/0" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">invalidate_cache()</h1>
+
+      <a href="https://github.com/mavuio/mavu_snippets/blob/master/lib/snippet_groups.ex#L125" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+
+  </section>
+</section>
+<section class="detail" id="list_snippet_groups/1">
+
+  <div class="detail-header">
+    <a href="#list_snippet_groups/1" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">list_snippet_groups(conf)</h1>
+
+      <a href="https://github.com/mavuio/mavu_snippets/blob/master/lib/snippet_groups.ex#L54" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>Returns the list of snippet-groups.</p><h2 id="list_snippet_groups/1-examples" class="section-heading">
+  <a href="#list_snippet_groups/1-examples" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
+  Examples
+</h2>
+<pre><code class="makeup elixir"><span class="gp unselectable">iex&gt; </span><span class="n">list_snippet_groups</span><span class="p" data-group-id="2274315416-1">(</span><span class="p" data-group-id="2274315416-1">)</span><span class="w">
+</span><span class="p" data-group-id="2274315416-2">[</span><span class="p" data-group-id="2274315416-3">%</span><span class="nc" data-group-id="2274315416-3">SnippetGroup</span><span class="p" data-group-id="2274315416-3">{</span><span class="p" data-group-id="2274315416-3">}</span><span class="p">,</span><span class="w"> </span><span class="n">...</span><span class="p" data-group-id="2274315416-2">]</span></code></pre>
+  </section>
+</section>
+<section class="detail" id="update_snippet_group/3">
+
+    <span id="update_snippet_group/2"></span>
+
+  <div class="detail-header">
+    <a href="#update_snippet_group/3" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">update_snippet_group(snippet_group, attrs, conf \\ %{})</h1>
+
+      <a href="https://github.com/mavuio/mavu_snippets/blob/master/lib/snippet_groups.ex#L114" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>Updates a snippet_group.</p><h2 id="update_snippet_group/3-examples" class="section-heading">
+  <a href="#update_snippet_group/3-examples" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
+  Examples
+</h2>
+<pre><code class="makeup elixir"><span class="gp unselectable">iex&gt; </span><span class="n">update_snippet_group</span><span class="p" data-group-id="1088734636-1">(</span><span class="n">snippet_group</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="1088734636-2">%{</span><span class="ss">field</span><span class="p">:</span><span class="w"> </span><span class="n">new_value</span><span class="p" data-group-id="1088734636-2">}</span><span class="p">,</span><span class="w"> </span><span class="n">conf</span><span class="p" data-group-id="1088734636-1">)</span><span class="w">
+</span><span class="p" data-group-id="1088734636-3">{</span><span class="ss">:ok</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="1088734636-4">%</span><span class="nc" data-group-id="1088734636-4">SnippetGroup</span><span class="p" data-group-id="1088734636-4">{</span><span class="p" data-group-id="1088734636-4">}</span><span class="p" data-group-id="1088734636-3">}</span><span class="w">
+
+</span><span class="gp unselectable">iex&gt; </span><span class="n">update_snippet_group</span><span class="p" data-group-id="1088734636-5">(</span><span class="n">snippet_group</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="1088734636-6">%{</span><span class="ss">field</span><span class="p">:</span><span class="w"> </span><span class="n">bad_value</span><span class="p" data-group-id="1088734636-6">}</span><span class="p">,</span><span class="w"> </span><span class="n">conf</span><span class="p" data-group-id="1088734636-5">)</span><span class="w">
+</span><span class="p" data-group-id="1088734636-7">{</span><span class="ss">:error</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="1088734636-8">%</span><span class="nc" data-group-id="1088734636-8">Ecto.Changeset</span><span class="p" data-group-id="1088734636-8">{</span><span class="p" data-group-id="1088734636-8">}</span><span class="p" data-group-id="1088734636-7">}</span></code></pre>
+  </section>
+</section>
+
+          </div>
+        </section>
+
+      <footer class="footer">
+        <p>
+          <span class="line">
+            Built using
+            <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" target="_blank" rel="help noopener">ExDoc</a> (v0.24.2) for the
+            <a href="https://elixir-lang.org" title="Elixir" target="_blank">Elixir programming language</a>.
+          </span>
+          <span class="line">
+            Designed by
+            <a href="https://twitter.com/dignifiedquire" target="_blank" rel="noopener" title="@dignifiedquire">Friedel Ziegelmayer</a>.
+          </span>
+        </p>
+        <p>
+
+            <a href="api-reference.html" title="API reference" class="line footer-button">API Reference</a>
+
+          <button class="line footer-button display-shortcuts-help">
+            Display keyboard shortcuts
+          </button>
+          <button class="line footer-button night-mode-toggle">
+            Toggle night mode
+          </button>
+          <button class="line footer-button display-quick-switch">
+            Go to a HexDocs package
+          </button>
+          <button class="line footer-button tooltips-toggle">
+            <span class="tooltips-option-disable">Disable tooltips</span>
+            <span class="tooltips-option-enable">Enable tooltips</span>
+          </button>
+        </p>
+      </footer>
+    </div>
+  </div>
+</section>
+</div>
+
+
+  </body>
+</html>
