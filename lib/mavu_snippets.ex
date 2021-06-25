@@ -166,7 +166,7 @@ defmodule MavuSnippets do
 
         text
         |> MavuSnippets.SnippetCompiler.compile(Keyword.drop(variables, [:do, :conf]))
-        |> format_snippet_accordingly(el["ctype"])
+        |> format_snippet_accordingly(variables[:format_as] || el["ctype"])
 
       _ ->
         default || "[" <> path <> "]"
