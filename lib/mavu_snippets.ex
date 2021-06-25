@@ -234,6 +234,10 @@ defmodule MavuSnippets do
           {:fallback, text}
         end
     end
+    |> case do
+      {type, nil} -> {type, ""}
+      other -> other
+    end
   end
 
   def get_text_from_element(el, lang_str, conf \\ %{})
