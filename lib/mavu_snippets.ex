@@ -116,6 +116,7 @@ defmodule MavuSnippets do
       String.ends_with?(name, "_html") -> "ce_html_snippet"
       String.ends_with?(name, "_text") -> "ce_html_snippet"
       String.ends_with?(name, "_plaintext") -> "ce_text_snippet"
+      String.ends_with?(name, "_json") -> "ce_text_snippet"
       true -> "ce_textline_snippet"
     end
   end
@@ -202,6 +203,19 @@ defmodule MavuSnippets do
     contentlist = Clist.update(snippet_group.content, "root", el["uid"], values)
     {:ok, el} = SnippetGroups.update_snippet_group(snippet_group, %{content: contentlist}, conf)
     el
+  end
+
+  def get_default_text_from_element(el, lang_or_params, _conf \\ %{})
+      when is_map(el) do
+    lang = lang_from_params(lang_or_params)
+
+    langnum = langnum_for_langstr(lang)
+
+    Map.get(el, "text_d#{langnum}", :no_default_text_found)
+    |> case do
+      :no_default_text_found -> ""
+      text -> text
+    end
   end
 
   def get_effective_text_from_element(el, lang_or_params, conf \\ %{})
