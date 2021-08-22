@@ -8,4 +8,4 @@
                         'Elixir.MavuSnippets.SnippetGroup',
                         'Elixir.MavuSnippets.SnippetGroups']},
               {registered,[]},
-              {vsn,"0.1.5"}]}.
+              {vsn,"0.1.6"}]}.

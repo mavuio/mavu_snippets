@@ -20,7 +20,7 @@ defmodule MavuSnippets.SnippetGroup do
   end
 
   def normalize_path(path) do
-    Regex.replace(~r([^a-z/-])i, "#{path}", "_")
+    Regex.replace(~r([^a-z0-9/-])i, "#{path}", "_")
     |> String.downcase()
     |> String.trim("_")
     |> String.trim("/")
@@ -28,7 +28,7 @@ defmodule MavuSnippets.SnippetGroup do
   end
 
   def normalize_slug(path) do
-    Regex.replace(~r([^a-z/-])i, "#{path}", "_")
+    Regex.replace(~r([^a-z0-9/-])i, "#{path}", "_")
     |> String.downcase()
     |> String.trim("_")
   end
