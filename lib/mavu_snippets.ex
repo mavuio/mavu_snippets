@@ -117,6 +117,7 @@ defmodule MavuSnippets do
       String.ends_with?(name, "_text") -> "ce_html_snippet"
       String.ends_with?(name, "_plaintext") -> "ce_text_snippet"
       String.ends_with?(name, "_json") -> "ce_text_snippet"
+      String.ends_with?(name, "_file") -> "ce_file_snippet"
       true -> "ce_textline_snippet"
     end
   end
@@ -263,6 +264,26 @@ defmodule MavuSnippets do
       empty_text when empty_text in [nil, ""] ->
         case Map.get(el, "text_d#{langnum}", :no_default_text_found) do
           :no_default_text_found -> {:unset, ""}
+          text -> {:default, text}
+        end
+
+      :no_text_found ->
+        {:unset, ""}
+
+      text ->
+        {:custom, text}
+    end
+  end
+
+  def get_filename_from_element(el, lang_str, conf \\ %{})
+      when is_binary(lang_str) and is_map(el) do
+    langnum = langnum_for_langstr(lang_str, conf)
+
+    Map.get(el, "filename_l#{langnum}", :no_text_found)
+    |> case do
+      empty_text when empty_text in [nil, ""] ->
+        case Map.get(el, "filename_d#{langnum}", :no_default_filename_found) do
+          :no_default_filename_found -> {:unset, ""}
           text -> {:default, text}
         end
 
