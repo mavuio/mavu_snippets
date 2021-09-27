@@ -164,7 +164,11 @@ defmodule MavuSnippets do
       el when is_map(el) ->
         el = update_default_content_in_element_if_needed(el, default, path, variables[:conf])
 
-        {_mode, text} = get_effective_text_from_element(el, lang_or_params, variables[:conf])
+        {_mode, text} =
+          case el["ctype"] do
+            "file" -> get_filename_from_element(el, lang_or_params, variables[:conf])
+            _ -> get_effective_text_from_element(el, lang_or_params, variables[:conf])
+          end
 
         text
         |> MavuSnippets.SnippetCompiler.compile(Keyword.drop(variables, [:do, :conf]))
@@ -276,6 +280,8 @@ defmodule MavuSnippets do
   end
 
   def get_filename_from_element(el, lang_str, conf \\ %{})
+
+  def get_filename_from_element(el, lang_str, conf)
       when is_binary(lang_str) and is_map(el) do
     langnum = langnum_for_langstr(lang_str, conf)
 
@@ -294,6 +300,9 @@ defmodule MavuSnippets do
         {:custom, text}
     end
   end
+
+  def get_filename_from_element(el, lang_or_params, conf),
+    do: get_filename_from_element(el, lang_from_params(lang_or_params), conf)
 
   def lang_from_params(lang_or_params, conf \\ %{}) do
     case lang_or_params do
