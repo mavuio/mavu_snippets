@@ -64,7 +64,13 @@ defmodule MavuSnippets do
     )
     |> case do
       nil ->
-        create_snippet_element(snippet_group_path, element_slug, opts[:default], nil, opts[:conf])
+        create_snippet_element(
+          snippet_group_path,
+          element_slug,
+          opts[:default],
+          opts[:default_ctype],
+          opts[:conf]
+        )
 
       val ->
         val
@@ -160,7 +166,11 @@ defmodule MavuSnippets do
           {default, variables}
       end
 
-    case get_snippet_element(path, default: default, conf: variables[:conf]) do
+    case get_snippet_element(path,
+           default: default,
+           conf: variables[:conf],
+           default_ctype: variables[:default_ctype]
+         ) do
       el when is_map(el) ->
         el = update_default_content_in_element_if_needed(el, default, path, variables[:conf])
 
@@ -253,16 +263,21 @@ defmodule MavuSnippets do
       when is_binary(lang_str) and is_map(el) do
     langnum = langnum_for_langstr(lang_str, conf)
 
-    Map.get(el, "text_l#{langnum}", "")
-    |> case do
+    text = Map.get(el, "text_l#{langnum}")
+
+    if is_empty_text(text) do
       "" ->
-        text = Map.get(el, "text_d#{langnum}", "")
+        text = Map.get(el, "text_d#{langnum}", "") || ""
         {text, lang_str, :default}
 
       text when is_binary(text) ->
         {text, lang_str, :custom}
     end
   end
+
+  def is_empty_text?(text) when text in ["", nil, ":empty:"], do: true
+  def is_empty_text?(text) when is_binary(text), do: false
+  def is_empty_text?(_), do: true
 
   def get_filename_from_element(el, lang_str, conf \\ %{})
 
