@@ -164,7 +164,7 @@ defmodule MavuSnippets do
       el when is_map(el) ->
         el = update_default_content_in_element_if_needed(el, default, path, variables[:conf])
 
-        {_mode, text} =
+        {text, _lang, _fieldtype} =
           case el["ctype"] do
             "file" -> get_filename_from_element(el, lang_or_params, variables[:conf])
             _ -> get_effective_text_from_element(el, lang_or_params, variables[:conf])
@@ -216,46 +216,36 @@ defmodule MavuSnippets do
 
     langnum = langnum_for_langstr(lang)
 
-    Map.get(el, "text_d#{langnum}", :no_default_text_found)
-    |> case do
-      :no_default_text_found -> ""
-      text -> text
-    end
+    Map.get(el, "text_d#{langnum}", "")
   end
 
+  @doc """
+  gets text from element and target-language
+
+  - text = custom-text in target-language  empty, take default_text of target language
+  - if text is empty and target_language != default_language, call recursively for default language
+
+
+  """
   def get_effective_text_from_element(el, lang_or_params, conf \\ %{})
       when is_map(el) do
     lang = lang_from_params(lang_or_params)
     default_lang = default_lang(conf)
 
-    # {lang, default_lang} |> IO.inspect(label: "mwuits-debug 2021-06-20_18:48 ")
+    {text, lang, fieldtype} = get_text_from_element(el, lang)
 
-    case get_text_from_element(el, lang) do
-      {:custom, text} ->
-        {:custom, text}
+    if text == "" and lang != default_lang do
+      {text, lang, fieldtype} = get_text_from_element(el, default_lang)
 
-      {:default, default_text} ->
-        if lang == default_lang do
-          {:default, default_text}
-        else
-          case get_text_from_element(el, default_lang) do
-            {:custom, text} -> {:fallback, text}
-            {:default, _text} -> {:fallback, default_text}
-            {:unset, _text} -> {:fallback, default_text}
-          end
+      newfieldtype =
+        case fieldtype do
+          :custom -> :fallbacklang_custom
+          :default -> :fallbacklang_default
         end
 
-      {:unset, text} ->
-        if lang == default_lang do
-          {:unset, text}
-        else
-          {_mode, text} = get_text_from_element(el, default_lang)
-          {:fallback, text}
-        end
-    end
-    |> case do
-      {type, nil} -> {type, ""}
-      other -> other
+      {text, lang, newfieldtype}
+    else
+      {text, lang, fieldtype}
     end
   end
 
@@ -263,19 +253,14 @@ defmodule MavuSnippets do
       when is_binary(lang_str) and is_map(el) do
     langnum = langnum_for_langstr(lang_str, conf)
 
-    Map.get(el, "text_l#{langnum}", :no_text_found)
+    Map.get(el, "text_l#{langnum}", "")
     |> case do
-      empty_text when empty_text in [nil, ""] ->
-        case Map.get(el, "text_d#{langnum}", :no_default_text_found) do
-          :no_default_text_found -> {:unset, ""}
-          text -> {:default, text}
-        end
+      "" ->
+        text = Map.get(el, "text_d#{langnum}", "")
+        {text, lang_str, :default}
 
-      :no_text_found ->
-        {:unset, ""}
-
-      text ->
-        {:custom, text}
+      text when is_binary(text) ->
+        {text, lang_str, :custom}
     end
   end
 
@@ -285,19 +270,14 @@ defmodule MavuSnippets do
       when is_binary(lang_str) and is_map(el) do
     langnum = langnum_for_langstr(lang_str, conf)
 
-    Map.get(el, "filename_l#{langnum}", :no_text_found)
+    Map.get(el, "filename_l#{langnum}", "")
     |> case do
-      empty_text when empty_text in [nil, ""] ->
-        case Map.get(el, "filename_d#{langnum}", :no_default_filename_found) do
-          :no_default_filename_found -> {:unset, ""}
-          text -> {:default, text}
-        end
-
-      :no_text_found ->
-        {:unset, ""}
+      "" ->
+        text = Map.get(el, "filename_d#{langnum}", "")
+        {text, lang_str, :default}
 
       text ->
-        {:custom, text}
+        {text, lang_str, :custom}
     end
   end
 
