@@ -3,7 +3,8 @@ defmodule MavuSnippets.SnippetGroup do
   import Ecto.Changeset
 
   schema "snippets" do
-    field(:content, {:array, :map})
+    # field(:content, {:array, :map})
+    field(:content, Application.compile_env(:mavu_snippets, :json_array_type, {:array, :map}))
     field(:path, :string)
     field(:name, :string)
     timestamps()

@@ -3,8 +3,8 @@ defmodule MavuSnippets.SnippetCompiler do
   Compile text with provided values.
   """
 
-  @prefix Application.get_env(:mavu_snippets, :var_prefix) || "%{"
-  @suffix Application.get_env(:mavu_snippets, :var_suffix) || "}"
+  @prefix Application.compile_env(:mavu_snippets, :var_prefix) || "%{"
+  @suffix Application.compile_env(:mavu_snippets, :var_suffix) || "}"
 
   @doc """
   Compile text with provided values.
