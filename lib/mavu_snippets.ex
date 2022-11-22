@@ -263,21 +263,16 @@ defmodule MavuSnippets do
       when is_binary(lang_str) and is_map(el) do
     langnum = langnum_for_langstr(lang_str, conf)
 
-    text = Map.get(el, "text_l#{langnum}")
+    text = Map.get(el, "text_l#{langnum}", "") || ""
 
-    if is_empty_text(text) do
-      "" ->
-        text = Map.get(el, "text_d#{langnum}", "") || ""
-        {text, lang_str, :default}
+    if text == "" do
+      default_text = Map.get(el, "text_d#{langnum}", "") || ""
 
-      text when is_binary(text) ->
-        {text, lang_str, :custom}
+      {default_text, lang_str, :default}
+    else
+      {text, lang_str, :custom}
     end
   end
-
-  def is_empty_text?(text) when text in ["", nil, ":empty:"], do: true
-  def is_empty_text?(text) when is_binary(text), do: false
-  def is_empty_text?(_), do: true
 
   def get_filename_from_element(el, lang_str, conf \\ %{})
 
@@ -340,6 +335,12 @@ defmodule MavuSnippets do
     end)
     |> Map.new()
   end
+
+  @doc """
+  special case for ::no_text
+  """
+  def format_snippet_accordingly(text, _type) when text in ["::no_text", "<p>::notext</p>"],
+    do: ""
 
   def format_snippet_accordingly(content, type) do
     case type do
